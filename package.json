@@ -7,6 +7,7 @@
   "author": "Microsoft Corp.",
   "license": "MIT",
   "dependencies": {
+    "amqp10": "^2.0.3",
     "azure-iot-device": "^1.0.0-preview.4"
   }
 }
