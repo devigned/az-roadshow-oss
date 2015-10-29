@@ -14,9 +14,9 @@
 
 'use strict';
 
-var AMQPClient  = require('../lib').Client,
-    Policy = require('../lib').Policy,
-    translator = require('../lib').translator;
+var AMQPClient  = require('amqp10').Client,
+    Policy = require('amqp10').Policy,
+    translator = require('amqp10').translator;
 
 // Set the offset for the EventHub - this is where it should start receiving from, and is typically different for each partition
 // Here, I'm setting a global offset, just to show you how it's done. See node-sbus-amqp10 for a wrapper library that will
@@ -38,11 +38,11 @@ if (settingsFile) {
   settings = require('./' + settingsFile);
 } else {
   settings = {
-    serviceBusHost: process.env.ServiceBusNamespace,
-    eventHubName: process.env.EventHubName,
-    partitions: process.env.EventHubPartitionCount,
-    SASKeyName: process.env.EventHubKeyName,
-    SASKey: process.env.EventHubKey
+    serviceBusHost: process.env.SVC_BUS_NS,
+    eventHubName: process.env.HUB_NAME,
+    partitions: process.env.HUB_PARTITIONS,
+    SASKeyName: process.env.HUB_KEY_NAME,
+    SASKey: process.env.HUB_KEY
   };
 }
 

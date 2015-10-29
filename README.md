@@ -11,10 +11,20 @@ curl http://azroadshowweb.azurewebsites.net/hello.js
 ## Horizontal scalability for Linux backends with ARM
 ```bash
 . .env
+azure login
 azure group create az-roadshow-php-mem -l westus
-azure group deployment create az-roadshow-php-mem az-roadshow-php-mem-deploy --template-uri https://raw.githubusercontent.com/azure/azure-quickstart-templates/master/memcached-multi-vm-ubuntu/azuredeploy.json -p "{\"location\": {\"value\": \"West US\"}, \"newStorageAccountName\": {\"value\": \"azroadshowphpmemstor\"}, \"domainName\":{\"value\": \"azroadshowphpmem\"}, \"adminUsername\": {\"value\": \"$ADMIN_USERNAME\"}, \"adminPassword\":{\"value\": \"$ADMIN_PASS\"}}, \"numberOfMemcachedInstances\", {\"value\", 3}}"
+azure group deployment create az-roadshow-php-mem az-roadshow-php-mem-deploy --template-uri https://raw.githubusercontent.com/azure/azure-quickstart-templates/master/memcached-multi-vm-ubuntu/azuredeploy.json -p "{\"location\": {\"value\": \"West US\"}, \"newStorageAccountName\": {\"value\": \"azroadshowphpmemstor\"}, \"domainName\":{\"value\": \"azroadshowphpmem\"}, \"adminUsername\": {\"value\": \"$ADMIN_USERNAME\"}, \"adminPassword\":{\"value\": \"$ADMIN_PASS\"}, \"numberOfMemcachedInstances\": {\"value\":  3}}"
 curl azroadshowphpmem.westus.cloudapp.azure.com
 ```
+
+## Containers
+```bash
+. .env
+azure login
+azure group create az-roadshow-containers -l westus
+azure group deployment create az-roadshow-containers az-roadshow-containers-deploy --template-uri
+
+
 
 ## IoT Hubs
 ```bash
