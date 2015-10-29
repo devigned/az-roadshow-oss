@@ -1,7 +1,7 @@
 // Add reference to the Azure IoT Hub device library
 var device = require('azure-iot-device');
 // Define the connection string to connect to IoT Hub
-var connectionString = '[IoT Device Connection String]';
+var connectionString = process.env.IOT_CONN_STRING;
 // Create the client instance specifying the preferred protocol
 var client = new device.Client(connectionString, new device.Https());
 // Create a message and send it to IoT Hub.
