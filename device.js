@@ -4,19 +4,35 @@ var device = require('azure-iot-device');
 var connectionString = process.env.IOT_CONN_STRING;
 // Create the client instance specifying the preferred protocol
 var client = new device.Client(connectionString, new device.Https());
-// Create a message and send it to IoT Hub.
-var data = JSON.stringify({ 'deviceId': 'myFirstDevice', 'data': 'mydata' });
-var message = new device.Message(data);
-message.properties.add('myproperty', 'myvalue');
-client.sendEvent(message, function(err, res){
-    if (err) console.log('SendEvent error: ' + err.toString());
-    if (res) console.log('SendEvent status: ' + res.statusCode + ' ' + res.statusMessage);
-});
-// Receive messages from IoT Hub
-client.receive(function (err, res, msg) {
-  console.log('receive data: ' + msg.getData());
-  client.complete(msg, function(err, res){
-    if (err) console.log('Complete error: ' + err.toString());
-    if (res) console.log('Complete status: ' + res.statusCode + ' ' + res.statusMessage);
+
+// Create a message and send it to the IoT Hub every second
+setInterval(function(){
+  var windSpeed = 10 + (Math.random() * 4); // range: [10, 14]
+  var data = JSON.stringify({ deviceId: 'myLittlePi', windSpeed: windSpeed });
+  var message = new device.Message(data);
+  message.properties.add('myproperty', 'myvalue');
+  console.log("Sending message: " + message.getData());
+  client.sendEvent(message, printResultFor('send'));
+}, 1000);
+
+// Monitor messages from IoT Hub and print them in the console.
+setInterval(function(){
+  client.receive(function (err, res, msg) {
+    if (!err && res.statusCode !== 204) {
+      console.log('Received data: ' + msg.getData());
+      client.complete(msg, printResultFor('complete'));
+    }
+    else if (err)
+    {
+      printResultFor('receive')(err, res);
+    }
   });
-});
+}, 1000);
+
+// Helper function to print results in the console
+function printResultFor(op) {
+  return function printResult(err, res) {
+    if (err) console.log(op + ' error: ' + err.toString());
+    if (res && (res.statusCode !== 204)) console.log(op + ' status: ' + res.statusCode + ' ' + res.statusMessage);
+  };
+}
