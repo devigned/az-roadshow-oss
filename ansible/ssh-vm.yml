@@ -9,7 +9,7 @@
         module: azure_deploy
         state: absent
         subscription_id: cbbdaed0-fea9-4693-bf0c-d446ac93c030
-        resource_group_name: dev-ops-cle
+        resource_group_name: az-roadshow-oss-sshvm
 
 - name: Create VM with SSH Azure Deploy
   hosts: 127.0.0.1
@@ -20,7 +20,7 @@
         module: azure_deploy
         state: present
         subscription_id: cbbdaed0-fea9-4693-bf0c-d446ac93c030
-        resource_group_name: dev-ops-cle
+        resource_group_name: az-roadshow-oss-sshvm
         parameters:
           newStorageAccountName:
             value: devopsclestorage

@@ -1,0 +1,43 @@
+# azure group create az-roadshow-php-mem -l westus
+# azure group deployment create az-roadshow-php-mem az-roadshow-php-mem-deploy
+# --template-uri https://raw.githubusercontent.com/azure/azure-quickstart-templates/master/memcached-multi-vm-ubuntu/azuredeploy.json
+# -p "{\"location\": {\"value\": \"West US\"}, \"newStorageAccountName\": {\"value\": \"azroadshowphpmemstor\"},
+# \"domainName\":{\"value\": \"azroadshowphpmem\"}, \"adminUsername\": {\"value\": \"$ADMIN_USERNAME\"},
+# \"adminPassword\":{\"value\": \"$ADMIN_PASS\"}, \"numberOfMemcachedInstances\": {\"value\":  3}}"
+
+---
+- name: Destory Azure Deploy
+  hosts: 127.0.0.1
+  connection: local
+  tasks:
+    - name: Delete deploy
+      local_action:
+        module: azure_deploy
+        state: absent
+        subscription_id: cbbdaed0-fea9-4693-bf0c-d446ac93c030
+        resource_group_name: az-roadshow-oss-phpmem
+
+- name: Create VM with SSH Azure Deploy
+  hosts: 127.0.0.1
+  connection: local
+  tasks:
+    - name: Create deploy
+      local_action:
+        module: azure_deploy
+        state: present
+        subscription_id: cbbdaed0-fea9-4693-bf0c-d446ac93c030
+        resource_group_name: az-roadshow-oss-phpmem
+        parameters:
+          newStorageAccountName:
+            value: devopsclestorage
+          adminUsername:
+            value: lookup('env', 'ADMIN_USERNAME')
+          adminUsername:
+            value: lookup('env', 'ADMIN_PASSWORD')
+          domainName:
+            value: azroadshowossphpmem
+          location:
+            value: West US
+          numberOfMemcachedInstances:
+            value: 3
+        template_link: 'https://raw.githubusercontent.com/azure/azure-quickstart-templates/master/memcached-multi-vm-ubuntu/azuredeploy.json'
