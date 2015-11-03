@@ -1,5 +1,7 @@
 # Azure Cloud Roadshow OSS Apps
 
+In this we'll use azure cli in a docker container to spin up some infrastructure.
+
 ## WebApps
 ```bash
 azure login

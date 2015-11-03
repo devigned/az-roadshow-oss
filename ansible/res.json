@@ -1,0 +1,103 @@
+{
+  "changed": true,
+  "deployment": {
+    "id": "/subscriptions/cbbdaed0-fea9-4693-bf0c-d446ac93c030/resourceGroups/dev-ops-cle/deployments/test01",
+    "name": "test01",
+    "properties": {
+      "correlation_id": "8a5ada95-f024-4868-af2c-ea21d6b91afb",
+      "dependencies": [{
+        "depends_on": [{
+          "id": "/subscriptions/cbbdaed0-fea9-4693-bf0c-d446ac93c030/resourceGroups/dev-ops-cle/providers/Microsoft.Network/publicIPAddresses/myPublicIP",
+          "resource_name": "myPublicIP",
+          "resource_type": "Microsoft.Network/publicIPAddresses"
+        }, {
+          "id": "/subscriptions/cbbdaed0-fea9-4693-bf0c-d446ac93c030/resourceGroups/dev-ops-cle/providers/Microsoft.Network/virtualNetworks/MyVNET",
+          "resource_name": "MyVNET",
+          "resource_type": "Microsoft.Network/virtualNetworks"
+        }],
+        "id": "/subscriptions/cbbdaed0-fea9-4693-bf0c-d446ac93c030/resourceGroups/dev-ops-cle/providers/Microsoft.Network/networkInterfaces/myVMNic",
+        "resource_name": "myVMNic",
+        "resource_type": "Microsoft.Network/networkInterfaces"
+      }, {
+        "depends_on": [{
+          "id": "/subscriptions/cbbdaed0-fea9-4693-bf0c-d446ac93c030/resourceGroups/dev-ops-cle/providers/Microsoft.Storage/storageAccounts/devopsclestorage",
+          "resource_name": "devopsclestorage",
+          "resource_type": "Microsoft.Storage/storageAccounts"
+        }, {
+          "id": "/subscriptions/cbbdaed0-fea9-4693-bf0c-d446ac93c030/resourceGroups/dev-ops-cle/providers/Microsoft.Network/networkInterfaces/myVMNic",
+          "resource_name": "myVMNic",
+          "resource_type": "Microsoft.Network/networkInterfaces"
+        }],
+        "id": "/subscriptions/cbbdaed0-fea9-4693-bf0c-d446ac93c030/resourceGroups/dev-ops-cle/providers/Microsoft.Compute/virtualMachines/MyUbuntuVM",
+        "resource_name": "MyUbuntuVM",
+        "resource_type": "Microsoft.Compute/virtualMachines"
+      }],
+      "mode": "Incremental",
+      "outputs": null,
+      "parameters": "{\"adminUsername\": {\"type\": \"String\", \"value\": \"devopscle\"}, \"newStorageAccountName\": {\"type\": \"String\", \"value\": \"devopsclestorage\"}, \"dnsNameForPublicIP\": {\"type\": \"String\", \"value\": \"devopscleazure\"}, \"ubuntuOSVersion\": {\"type\": \"String\", \"value\": \"14.04.2-LTS\"}, \"adminPassword\": {\"type\": \"SecureString\"}}",
+      "parameters_link": {
+        "content_version": null,
+        "uri": "https://raw.githubusercontent.com/devigned/ansible-arm/master/paramters.json"
+      },
+      "providers": [{
+        "id": null,
+        "namespace": "Microsoft.Storage",
+        "registration_state": null,
+        "request_id": null,
+        "resource_types": [{
+          "api_versions": [],
+          "locations": ["westus"],
+          "name": "storageAccounts",
+          "properties": {}
+        }],
+        "status_code": null
+      }, {
+        "id": null,
+        "namespace": "Microsoft.Network",
+        "registration_state": null,
+        "request_id": null,
+        "resource_types": [{
+          "api_versions": [],
+          "locations": ["westus"],
+          "name": "publicIPAddresses",
+          "properties": {}
+        }, {
+          "api_versions": [],
+          "locations": ["westus"],
+          "name": "virtualNetworks",
+          "properties": {}
+        }, {
+          "api_versions": [],
+          "locations": ["westus"],
+          "name": "networkInterfaces",
+          "properties": {}
+        }],
+        "status_code": null
+      }, {
+        "id": null,
+        "namespace": "Microsoft.Compute",
+        "registration_state": null,
+        "request_id": null,
+        "resource_types": [{
+          "api_versions": [],
+          "locations": ["westus"],
+          "name": "virtualMachines",
+          "properties": {}
+        }],
+        "status_code": null
+      }],
+      "provisioning_state": "Succeeded",
+      "template": null,
+      "template_link": {
+        "content_version": "1.0.0.0",
+        "uri": "https://github.com/Azure/azure-quickstart-templates/raw/master/101-simple-linux-vm/azuredeploy.json"
+      },
+      "timestamp": "2015-09-18T03:44:20.3081864Z"
+    }
+  },
+  "group_name": "dev-ops-cle",
+  "id": "/subscriptions/cbbdaed0-fea9-4693-bf0c-d446ac93c030/resourceGroups/dev-ops-cle/deployments/test01",
+  "msg": "deployment created",
+  "name": "test01",
+  "outputs": null
+}
