@@ -6,8 +6,9 @@ In this we'll use azure cli in a docker container to spin up some infrastructure
 ```bash
 docker run -it microsoft/azure-cli
 azure group create az-roadshow-web -l westus
-azure group deployment create -g az-roadshow-web --template-uri https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-web-app-github-deploy/azuredeploy.json -p '{"repoURL": {"value": "https://github.com/davidebbo-test/NodeHelloWorld.git"}, "siteName": {"value": "azroadshowweb"}, "hostingPlanName": {"value": "someplan"}, "siteLocation": {"value": "westus"}}'
+azure group deployment create -g az-roadshow-web --template-uri https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-web-app-github-deploy/azuredeploy.json -p '{"repoURL": {"value": "https://github.com/devigned/az-roadshow-oss.git"}, "siteName": {"value": "azroadshowweb"}, "hostingPlanName": {"value": "someplan"}, "siteLocation": {"value": "westus"}, "sku": {"value": "Standard"}}'
 curl http://azroadshowweb.azurewebsites.net/hello.js
+ab -c 5 -t 60 http://azroadshowweb.azurewebsites.net/hello.js
 ```
 
 ## Horizontal scalability for Linux backends with ARM
