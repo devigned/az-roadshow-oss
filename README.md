@@ -4,7 +4,7 @@ In this we'll use azure cli in a docker container to spin up some infrastructure
 
 ## WebApps
 ```bash
-azure login
+docker run -it microsoft/azure-cli
 azure group create az-roadshow-web -l westus
 azure group deployment create -g az-roadshow-web --template-uri https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-web-app-github-deploy/azuredeploy.json -p '{"repoURL": {"value": "https://github.com/davidebbo-test/NodeHelloWorld.git"}, "siteName": {"value": "azroadshowweb"}, "hostingPlanName": {"value": "someplan"}, "siteLocation": {"value": "westus"}}'
 curl http://azroadshowweb.azurewebsites.net/hello.js
@@ -13,19 +13,29 @@ curl http://azroadshowweb.azurewebsites.net/hello.js
 ## Horizontal scalability for Linux backends with ARM
 ```bash
 . .env
-azure login
+
+# choose one path or the other:
+# 1, using azure cli
+
+docker run -it microsoft/azure-cli
 azure group create az-roadshow-php-mem -l westus
-azure group deployment create az-roadshow-php-mem az-roadshow-php-mem-deploy --template-uri https://raw.githubusercontent.com/azure/azure-quickstart-templates/master/memcached-multi-vm-ubuntu/azuredeploy.json -p "{\"location\": {\"value\": \"West US\"}, \"newStorageAccountName\": {\"value\": \"azroadshowphpmemstor\"}, \"domainName\":{\"value\": \"azroadshowphpmem\"}, \"adminUsername\": {\"value\": \"$ADMIN_USERNAME\"}, \"adminPassword\":{\"value\": \"$ADMIN_PASS\"}, \"numberOfMemcachedInstances\": {\"value\":  3}}"
-curl azroadshowphpmem.westus.cloudapp.azure.com
+azure group deployment create az-roadshow-php-mem az-roadshow-php-mem-deploy --template-uri https://raw.githubusercontent.com/azure/azure-quickstart-templates/master/memcached-multi-vm-ubuntu/azuredeploy.json -p "{\"location\": {\"value\": \"West US\"}, \"newStorageAccountName\": {\"value\": \"azroadshowphpmemstor\"}, \"domainName\":{\"value\": \"azroadshowossphpmem\"}, \"adminUsername\": {\"value\": \"$ADMIN_USERNAME\"}, \"adminPassword\":{\"value\": \"$ADMIN_PASS\"}, \"numberOfMemcachedInstances\": {\"value\":  3}}"
+
+
+# 2, using ansible
+cd ansible
+ansible scalable-vms.yml -i hosts
+curl azroadshowossphpmem.westus.cloudapp.azure.com
 ```
 
 ## Containers
 ```bash
-. .env
-azure login
-azure group create az-roadshow-containers -l westus
-azure group deployment create az-roadshow-containers az-roadshow-containers-deploy --template-uri
+# build the container environment, spin it up b/c it will take over 1.25 hrs. Instructions here:
+# https://azure.microsoft.com/en-us/blog/azure-container-service-now-and-the-future/
 
+# follow the quick start here: https://github.com/Azure/azure-quickstart-templates/tree/master/mesos-swarm-marathon
+
+```
 
 
 ## IoT Hubs
