@@ -1,0 +1,7 @@
+azure group create az-roadshow-web -l westus
+azure group deployment create -g az-roadshow-web --template-uri https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-web-app-github-deploy/azuredeploy.json -p '{"repoURL": {"value": "https://github.com/devigned/az-roadshow-oss.git"}, "siteName": {"value": "azroadshowweb"}, "hostingPlanName": {"value": "someplan"}, "siteLocation": {"value": "westus"}, "sku": {"value": "Standard"}}'
+atom demos/102_pass/hello.js
+git commit -am 'update for the location'
+git push origin master
+ab -c 5 -t 60 http://azroadshowweb.azurewebsites.net/hello.js
+./demos/102_paas/teardown.sh

@@ -17,7 +17,7 @@
 #         subscription_id: cbbdaed0-fea9-4693-bf0c-d446ac93c030
 #         resource_group_name: az-roadshow-oss-phpmem
 
-- name: Create VM with SSH Azure Deploy
+- name: Create VM with PHP and Memcache Azure Deploy
   hosts: 127.0.0.1
   connection: local
   tasks:
