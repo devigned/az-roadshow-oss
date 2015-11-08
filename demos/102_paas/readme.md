@@ -23,7 +23,7 @@ You will need to fork and change the repo location, so you can push changes to t
  ```
  - explain the cmds just run while you wait for the curl to show the running WebApp in the bottom pane
  - show the WebApp in the portal
- - edit the hello.js `atom demos/102_pass/hello.js`. Perhaps, change "world" to name of the place
+ - edit the hello.js `atom hello.js`. Perhaps, change "world" to name of the place
  - commit and push your changes to your remote repo
  - In the portal sync the WebApp with your git repo
  - watch the bottom pane and it will reflect your changes
