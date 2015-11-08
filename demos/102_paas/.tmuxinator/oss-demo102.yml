@@ -31,4 +31,4 @@ windows:
       layout: main-horizontal
       panes:
         - history -r demos/102_paas/cmds.txt; source ./env.sh; clear
-        - source ./env.sh; watch -n 0.5 "curl http://azroadshowweb.azurewebsites.net/demos/102_pass/hello.js"
+        - watch -n 0.5 "curl http://azroadshowweb.azurewebsites.net/hello.js -s"
