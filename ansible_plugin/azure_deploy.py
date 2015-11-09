@@ -608,7 +608,7 @@ def main():
                     group_name=conn_info['resource_group_name'],
                     id=deployment.id,
                     outputs=deployment.properties.outputs,
-                    instances=get_instances(module, resource_client, conn_info['resource_group_name'], deployment),
+                    # instances=get_instances(module, resource_client, conn_info['resource_group_name'], deployment),
                     changed=True,
                     msg='deployment created')
         module.exit_json(**data)

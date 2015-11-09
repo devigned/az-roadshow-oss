@@ -1,3 +1,2 @@
 ansible-playbook ansible/scalable-vms.yml -i ansible/hosts
-atom ansible/scalable-vms.yml
 ./demos/103_iaas/teardown.sh

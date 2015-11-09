@@ -1,0 +1,2 @@
+atom ansible/scalable-vms.yml
+watch -n 0.5 "curl azroadshowossphpmem.westus.cloudapp.azure.com -s"

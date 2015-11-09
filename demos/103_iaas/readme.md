@@ -11,12 +11,14 @@ Apache server and three Memcache instances. We'll use Ansible to deploy this ARM
 ## Steps
 - run `./prepare.sh`. This will open a tmux session showing a watch on the curl from the Apache server.
 - Top Pane:
- - Deploy the stack using `ansible-playbook ansible/scalable-vms.yml -i ansible/hosts`
- - explain the Ansible Playbook just run `atom ansible/scalable-vms.yml` while you wait for the curl to show the running web server
+ - Deploy the stack using `ansible-playbook ansible/scalable-vms.yml -i ansible/hosts`.
+   (You should deploy before the demo and redeploy during the demo. This will not hurt anything and greatly speed up the deploy.)
+ - see second pane while deployment
  - open the portal and explore/show the running stack
  - describe the differences between the IaaS solution and the PaaS solution concentrating on the tradeoff between
   extreme control and flexibility in IaaS and the more opinionated ease of PaaS.
 - Bottom Pane:
+ - explain the Ansible Playbook just run `atom ansible/scalable-vms.yml` while you wait for the curl to show the running web server
  - Curl in a watch window targeting the Apache endpoint
 
 ## Alternative to Ansible deployment

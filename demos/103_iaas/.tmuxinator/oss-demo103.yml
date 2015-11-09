@@ -30,5 +30,5 @@ windows:
   - work:
       layout: main-horizontal
       panes:
-        - history -r demos/103_iaas/cmds.txt; source ./env.sh; clear
-        - source ./env.sh; watch -n 0.5 "curl azroadshowossphpmem.westus.cloudapp.azure.com"
+        - history -r demos/103_iaas/cmds.txt; source .env.sh; clear
+        - history -r demos/103_iaas/bottom_cmds.txt; source .env.sh; clear

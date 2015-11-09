@@ -6,6 +6,7 @@
 # \"adminPassword\":{\"value\": \"$ADMIN_PASS\"}, \"numberOfMemcachedInstances\": {\"value\":  3}}"
 
 ---
+
 # - name: Destory Azure Deploy
 #   hosts: 127.0.0.1
 #   connection: local
@@ -16,6 +17,9 @@
 #         state: absent
 #         subscription_id: cbbdaed0-fea9-4693-bf0c-d446ac93c030
 #         resource_group_name: az-roadshow-oss-phpmem
+
+
+# Create an Ubuntu 14.04 instance running Apache connected to 3 VMs running Ubuntu 14.04 running Memcache
 
 - name: Create VM with PHP and Memcache Azure Deploy
   hosts: 127.0.0.1
