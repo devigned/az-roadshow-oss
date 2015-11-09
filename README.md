@@ -10,3 +10,7 @@ Each of these demos is explained in further detail within their respective direc
 - [103 - Scalable Apache / Memcache Demo](./demos/103_iaas/readme.md)
 - [201 - Internet of Things Hub](./demos/201_iot/readme.md)
 - [202 - Azure Container Services](./demos/202_acs/readme.md)
+
+## Getting Started
+Copy the env.sh.example to .env.sh and fill in with empty environment variables. These will be used for credentials when
+needed by the scripts.
