@@ -19,4 +19,13 @@ do this ahead of time see [ACS blog post](https://azure.microsoft.com/en-us/blog
 - explain how provisioning infrastructure is now separated from deploying the containers
 
 ## Steps
-- run `./prepare.sh`. This will open a tmux session showing a watch on the curl from the Apache server.
+- I usually set this up using my id_rsa.pub key to take much of the pain out of connecting to boxes. I also run setup with swarm enabled.
+- set up an ssh tunnel to the jumpbox (following is platform specific) `ssh -N -p 22 azureuser@{jumpboxip} -L 5901:localhost:5901`
+- open the VNC Viewer to localhost:1 with the password of password
+- From the Jumpbox:
+ - ensure the swarm framework is available via the mesos ui at http://c1master1:5050
+ - if swarm framework is not setup, run through setup via [swarm mesos readme](https://github.com/docker/swarm/tree/master/cluster/mesos) while ssh into c1master1.
+  I've ran into a couple times when the swarm framework was not working and needed to do this so make sure to do it before the demo.
+ - From the master, you should be able to `sudo docker -H tcp://10.0.0.5:2376 info`
+ - Show docker containers running, being spread throughout the cluster, and responding to regular docker commands.
+  - Perhaps something like `sudo docker run -d -p 80 -c 2 -m 256m tutum/hello-world` which requires 2 cpu and 256mb mem.

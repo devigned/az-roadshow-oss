@@ -4,7 +4,7 @@ setup for this, but you can simulate this by running all of this from a laptop. 
 one using the go-pi-go and the other a more default flow.
 
 # Setup
-Before performing this demo, please setup an IoT hub, stream processing job, and service bus eventhub via {add url}
+Before performing this demo, please setup an IoT hub, stream processing job, and service bus eventhub via this [sample](https://github.com/Azure-Samples/iot-hub-c-mbed-temperature-anomaly). 
 
 ## Simulated Demo
 This version of the demo will run from local environment and simulated an IoTHub connected device.
