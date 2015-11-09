@@ -14,3 +14,10 @@ Each of these demos is explained in further detail within their respective direc
 ## Getting Started
 Copy the env.sh.example to .env.sh and fill in with empty environment variables. These will be used for credentials when
 needed by the scripts.
+
+### You will also need the following tools
+- Azure CLI
+- tmux and tmuxinator
+- Docker Toolbox
+- (optional, but recommended) Ansible
+- (optional) an IoT device
