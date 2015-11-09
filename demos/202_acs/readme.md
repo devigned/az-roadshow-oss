@@ -28,4 +28,4 @@ do this ahead of time see [ACS blog post](https://azure.microsoft.com/en-us/blog
   I've ran into a couple times when the swarm framework was not working and needed to do this so make sure to do it before the demo.
  - From the master, you should be able to `sudo docker -H tcp://10.0.0.5:2376 info`
  - Show docker containers running, being spread throughout the cluster, and responding to regular docker commands.
-  - Perhaps something like `sudo docker run -d -p 80 -c 2 -m 256m tutum/hello-world` which requires 2 cpu and 256mb mem.
+  - Perhaps something like `sudo docker run -H tcp://10.0.0.5:2376 -d -p 80 -c 2 -m 256m tutum/hello-world` which requires 2 cpu and 256mb mem.
