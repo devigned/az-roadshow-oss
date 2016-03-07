@@ -1,12 +1,26 @@
 #!/usr/bin/python
+# This file is part of Ansible
+#
+# Ansible is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Ansible is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 DOCUMENTATION = '''
 ---
-module: azure_deploy
+module: azure_deployment
 short_description: Create or destroy Azure Resource Manager template deployments
 version_added: "2.0"
 description:
      - Create or destroy Azure Resource Manager template deployments via the Azure SDK for Python.
-       You can find some quick start templates in Github here: https://github.com/Azure/azure-quickstart-templates.
+       You can find some quick start templates in GitHub here: https://github.com/azure/azure-quickstart-templates.
        If you would like to find out more information about Azure Resource Manager templates, see: https://azure.microsoft.com/en-us/documentation/articles/resource-group-template-deploy/.
 options:
   subscription_id:
@@ -60,57 +74,88 @@ EXAMPLES = '''
 - name: Destroy Azure Deploy
   azure_deploy:
     state: absent
-    subscription_id: subscription_id
+    subscription_id: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
     resource_group_name: dev-ops-cle
 
 # Create or update a template deployment based on uris to paramters and a template
 - name: Create Azure Deploy
   azure_deploy:
     state: present
-    subscription_id: subscription_id
+    subscription_id: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
     resource_group_name: dev-ops-cle
     parameters_link: 'https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-simple-linux-vm/azuredeploy.parameters.json'
     template_link: 'https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-simple-linux-vm/azuredeploy.json'
 
 # Create or update a template deployment based on a uri to the template and parameters specified inline.
-# This deploys a VM with SSH support for a given public key, then stores the result in 'azure'. The result is then used
+# This deploys a VM with SSH support for a given public key, then stores the result in 'azure_vms'. The result is then used
 # to create a new host group. This host group is then used to wait for each instance to respond to the public IP SSH.
-- name: Create Azure Deploy
-  azure_deploy:
+---
+- hosts: localhost
+  tasks:
+    - name: Destroy Azure Deploy
+      azure_deployment:
+        state: absent
+        subscription_id: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+        resource_group_name: dev-ops-cle
+
+    - name: Create Azure Deploy
+      azure_deployment:
+        state: present
+        subscription_id: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+        resource_group_name: dev-ops-cle
+        parameters:
+          newStorageAccountName:
+            value: devopsclestorage1
+          adminUsername:
+            value: devopscle
+          dnsNameForPublicIP:
+            value: devopscleazure
+          location:
+            value: West US
+          vmSize:
+            value: Standard_A2
+          vmName:
+            value: ansibleSshVm
+          sshKeyData:
+            value: YOUR_SSH_PUBLIC_KEY
+        template_link: 'https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-vm-sshkey/azuredeploy.json'
+      register: azure
+    - name: Add new instance to host group
+      add_host: hostname={{ item['ips'][0].public_ip }} groupname=azure_vms
+      with_items: azure.instances
+
+- hosts: azure_vms
+  user: devopscle
+  tasks:
+    - name: Wait for SSH to come up
+      wait_for: port=22 timeout=2000 state=started
+    - name: echo the hostname of the vm
+      shell: hostname
+
+# Deploy an Azure WebApp running a hello world'ish node app
+- name: Create Azure WebApp Deployment at http://devopscleweb.azurewebsites.net/hello.js
+  azure_deployment:
     state: present
     subscription_id: cbbdaed0-fea9-4693-bf0c-d446ac93c030
-    resource_group_name: dev-ops-cle
+    resource_group_name: dev-ops-cle-webapp
     parameters:
-      newStorageAccountName:
-        value: devopsclestorage
-      adminUsername:
-        value: devopscle
-      adminPassword:
-        value: Password1!
-      dnsNameForPublicIP:
-        value: devopscleazure
-      location:
+      repoURL:
+        value: 'https://github.com/devigned/az-roadshow-oss.git'
+      siteName:
+        value: devopscleweb
+      hostingPlanName:
+        value: someplan
+      siteLocation:
         value: westus
-      vmSize:
-        value: Standard_A2
-      vmName:
-        value: ansibleSshVm
-      sshKeyData:
-        value: your public key
-    template_link: 'https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-vm-sshkey/azuredeploy.parameters.json'
-  register: azure
-- name: Add new instance to host group
-  add_host: hostname={{ item['ips'][0].public_ip }} groupname=launched
-  with_items: azure.instances
-- name: Wait for SSH to come up
-  wait_for: host={{ item['ips'][0]['dns_settings']['fqdn'] }} port=22 delay=60 timeout=320 state=started
-  with_items: azure.instances
+      sku:
+        value: Standard
+    template_link: 'https://raw.githubusercontent.com/azure/azure-quickstart-templates/master/201-web-app-github-deploy/azuredeploy.json'
 
 # Create or update a template deployment based on an inline template and parameters
 - name: Create Azure Deploy
   azure_deploy:
     state: present
-    subscription_id: cbbdaed0-fea9-4693-bf0c-d446ac93c030
+    subscription_id: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
     resource_group_name: dev-ops-cle
 
     template:
@@ -271,7 +316,8 @@ except ImportError:
 AZURE_URL = "https://management.azure.com"
 DEPLOY_URL_FORMAT = "/subscriptions/{}/resourcegroups/{}/providers/microsoft.resources/deployments/{}?api-version={}"
 RES_GROUP_URL_FORMAT = "/subscriptions/{}/resourcegroups/{}?api-version={}"
-API_VERSION = "2014-01-01"
+ARM_API_VERSION = "2015-01-01"
+NETWORK_API_VERSION = "2015-06-15"
 
 
 def get_token(domain_or_tenant, client_id, client_secret):
@@ -414,7 +460,7 @@ def deploy_template(module, client, conn_info):
     group_name = conn_info["resource_group_name"]
 
     deploy_parameter = azure.mgmt.resource.DeploymentProperties()
-    deploy_parameter.mode = azure.mgmt.resource.DeploymentMode.incremental
+    deploy_parameter.mode = "Complete"
 
     if module.params.get('parameters_link') is None:
         deploy_parameter.parameters = json.dumps(module.params.get('parameters'), ensure_ascii=False)
@@ -440,11 +486,13 @@ def deploy_template(module, client, conn_info):
         module.fail_json(msg='Deploy create failed with status code: %s and message: "%s"' % (e.status_code, e.message))
 
 
-def deploy_url(subscription_id, resource_group_name, deployment_name, api_version=API_VERSION):
+def deploy_url(subscription_id, resource_group_name, deployment_name, api_version=ARM_API_VERSION):
     return AZURE_URL + DEPLOY_URL_FORMAT.format(subscription_id, resource_group_name, deployment_name, api_version)
 
-def res_group_url(subscription_id, resource_group_name, api_version=API_VERSION):
+
+def res_group_url(subscription_id, resource_group_name, api_version=ARM_API_VERSION):
     return AZURE_URL + RES_GROUP_URL_FORMAT.format(subscription_id, resource_group_name, api_version)
+
 
 def default_headers(token, with_content=False):
     headers = {'Authorization': 'Bearer {}'.format(token), 'Accept': 'application/json'}
@@ -553,7 +601,7 @@ def get_instances(module, client, group, deployment):
                                                      ip['dep'].resource_name,
                                                      "Microsoft.Network",
                                                      "publicIPAddresses",
-                                                     "2015-05-01-preview") for ip in ip_list]) for vm, ip_list in vms_and_ips if len(ip_list) > 0]
+                                                     NETWORK_API_VERSION) for ip in ip_list]) for vm, ip_list in vms_and_ips if len(ip_list) > 0]
 
     return [dict(vm_name=vm.resource_name, ips=[get_ip_dict(ip) for ip in ips]) for vm, ips in vms_and_ips]
 
@@ -580,15 +628,15 @@ def main():
         mutually_exclusive=[['template_link', 'template'], ['parameters_link', 'parameters']],
     )
 
+    if not HAS_DEPS:
+        module.fail_json(msg='requests and azure are required for this module')
+
     conn_info = get_azure_connection_info(module)
 
     if conn_info['security_token'] is None and \
             (conn_info['client_id'] is None or conn_info['client_secret'] is None or conn_info[
                 'tenant_or_domain'] is None):
         module.fail_json(msg='security token or client_id, client_secret and tenant_or_domain is required')
-
-    if not HAS_DEPS:
-        module.fail_json(msg='requests and azure are required for this module')
 
     if conn_info['security_token'] is None:
         conn_info['security_token'] = get_token(conn_info['tenant_or_domain'],
@@ -608,7 +656,7 @@ def main():
                     group_name=conn_info['resource_group_name'],
                     id=deployment.id,
                     outputs=deployment.properties.outputs,
-                    # instances=get_instances(module, resource_client, conn_info['resource_group_name'], deployment),
+                    instances=get_instances(module, resource_client, conn_info['resource_group_name'], deployment),
                     changed=True,
                     msg='deployment created')
         module.exit_json(**data)
